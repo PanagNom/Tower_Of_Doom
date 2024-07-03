@@ -25,7 +25,7 @@ public class Cannon_Controller : MonoBehaviour
     {
         speed = 10f;
         fireRate = 1f;
-        ammunitionVelocity = 20f;
+        ammunitionVelocity = 70f;
 
         _inputs = new MyInputs();
         _inputs.MyInputMap.Enable();
@@ -60,7 +60,7 @@ public class Cannon_Controller : MonoBehaviour
             var test = _inputs.MyInputMap.MoveCannon.ReadValue<float>();
             var rotationPreClamp = Vector3.right * test * Time.deltaTime * speed;
 
-            rotationPreClamp.x = Mathf.Clamp((rotationPreClamp).x + transform.eulerAngles.x, 5, 90);
+            rotationPreClamp.x = Mathf.Clamp((rotationPreClamp).x + transform.eulerAngles.x, 55, 90);
 
             transform.eulerAngles =
                 new Vector3(rotationPreClamp.x,
@@ -77,7 +77,7 @@ public class Cannon_Controller : MonoBehaviour
         while (rotateAllowedHorz)
         {
             var test = _inputs.MyInputMap.RotateCannon.ReadValue<float>();
-            var rotationPreClamp = 10 * speed * test * Time.deltaTime * Vector3.up;
+            var rotationPreClamp = speed/2 * test * Time.deltaTime * Vector3.up;
 
             parentTransform.eulerAngles =
                 new Vector3(parentTransform.eulerAngles.x, rotationPreClamp.y + parentTransform.eulerAngles.y, parentTransform.eulerAngles.z);

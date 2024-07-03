@@ -29,5 +29,11 @@ public class Enemy_Controller : MonoBehaviour
             Debug.Log("Destroyed");
             Destroy(this.gameObject);
         }
+
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Exploded");
+            Destroy(this.gameObject);
+        }
     }
 }
