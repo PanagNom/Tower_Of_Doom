@@ -8,6 +8,7 @@ public class Enemy_Controller : MonoBehaviour
     private Rigidbody enemyBody;
 
     public float speed = 20.0f;
+    public GameObject player;
 
     // Start is called before the first frame update
     void Start()
@@ -16,8 +17,17 @@ public class Enemy_Controller : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        enemyBody.AddForce(-transform.forward * speed, ForceMode.Force);
+        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed*Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ammunition"))
+        {
+            Debug.Log("Destroyed");
+            Destroy(this.gameObject);
+        }
     }
 }
