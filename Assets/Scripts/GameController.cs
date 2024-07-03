@@ -22,8 +22,11 @@ public class GameController : MonoBehaviour
     {
         max = 100;
         min = -100;
+
         spawnTime = 10f;
         countTime = 0f;
+
+        playerHealth = 100;
     }
 
     // Update is called once per frame
@@ -51,6 +54,16 @@ public class GameController : MonoBehaviour
 
     public void UpdateScore(int points)
     {
+        score += points;
+    }
 
+    public void DamagePlayer(int damage)
+    {
+        playerHealth -= damage;
+
+        if (playerHealth < 0)
+        {
+            Debug.Log("Game Over");
+        }
     }
 }

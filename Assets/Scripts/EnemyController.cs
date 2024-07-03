@@ -7,6 +7,8 @@ public class Enemy_Controller : MonoBehaviour
 {
     private Rigidbody enemyBody;
 
+    private GameObject gameController;
+
     public float speed = 20.0f;
     public GameObject player;
 
@@ -14,6 +16,7 @@ public class Enemy_Controller : MonoBehaviour
     void Start()
     {
         enemyBody = GetComponent<Rigidbody>();
+        gameController = GameObject.Find("GameController");
     }
 
     // Update is called once per frame
@@ -27,12 +30,17 @@ public class Enemy_Controller : MonoBehaviour
         if (other.CompareTag("Ammunition"))
         {
             Debug.Log("Destroyed");
+
+            gameController.GetComponent<GameController>().UpdateScore(10);
+
             Destroy(this.gameObject);
         }
 
         if (other.CompareTag("Player"))
         {
             Debug.Log("Exploded");
+            gameController.GetComponent<GameController>().DamagePlayer(10);
+
             Destroy(this.gameObject);
         }
     }
