@@ -53,6 +53,15 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveTank"",
+                    ""type"": ""Value"",
+                    ""id"": ""6f16eb4f-2fbe-4481-b9f5-d894604db152"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -103,7 +112,7 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""09b7469d-77a0-4c0e-8171-c6984dd9667b"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -114,7 +123,7 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""7d1a8081-291f-4eda-8fe3-2fb7fb4b0f84"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -158,13 +167,46 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8a705775-9c95-433b-8e6b-193613759040"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""88487cad-de4a-4be7-9d6a-493e10a30b46"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveTank"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""1d9be7c6-0b76-4ec1-8727-7e84bf14ae19"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveTank"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""093bd370-d6a4-4493-9816-1affd83f9c47"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveTank"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -188,6 +230,7 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
         m_MyInputMap_MoveCannon = m_MyInputMap.FindAction("MoveCannon", throwIfNotFound: true);
         m_MyInputMap_RotateCannon = m_MyInputMap.FindAction("RotateCannon", throwIfNotFound: true);
         m_MyInputMap_Fire = m_MyInputMap.FindAction("Fire", throwIfNotFound: true);
+        m_MyInputMap_MoveTank = m_MyInputMap.FindAction("MoveTank", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -252,6 +295,7 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_MyInputMap_MoveCannon;
     private readonly InputAction m_MyInputMap_RotateCannon;
     private readonly InputAction m_MyInputMap_Fire;
+    private readonly InputAction m_MyInputMap_MoveTank;
     public struct MyInputMapActions
     {
         private @MyInputs m_Wrapper;
@@ -259,6 +303,7 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
         public InputAction @MoveCannon => m_Wrapper.m_MyInputMap_MoveCannon;
         public InputAction @RotateCannon => m_Wrapper.m_MyInputMap_RotateCannon;
         public InputAction @Fire => m_Wrapper.m_MyInputMap_Fire;
+        public InputAction @MoveTank => m_Wrapper.m_MyInputMap_MoveTank;
         public InputActionMap Get() { return m_Wrapper.m_MyInputMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -277,6 +322,9 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @MoveTank.started += instance.OnMoveTank;
+            @MoveTank.performed += instance.OnMoveTank;
+            @MoveTank.canceled += instance.OnMoveTank;
         }
 
         private void UnregisterCallbacks(IMyInputMapActions instance)
@@ -290,6 +338,9 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @MoveTank.started -= instance.OnMoveTank;
+            @MoveTank.performed -= instance.OnMoveTank;
+            @MoveTank.canceled -= instance.OnMoveTank;
         }
 
         public void RemoveCallbacks(IMyInputMapActions instance)
@@ -321,5 +372,6 @@ public partial class @MyInputs: IInputActionCollection2, IDisposable
         void OnMoveCannon(InputAction.CallbackContext context);
         void OnRotateCannon(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnMoveTank(InputAction.CallbackContext context);
     }
 }

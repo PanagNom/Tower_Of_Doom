@@ -11,6 +11,7 @@ public class Cannon_Controller : MonoBehaviour
     public MyInputs _inputs;
 
     public Transform parentTransform;
+    public Rigidbody parentRigid;
 
     public float fireRate;
     public float ammunitionVelocity;
@@ -19,13 +20,14 @@ public class Cannon_Controller : MonoBehaviour
 
     private bool rotateAllowedVert;
     private bool rotateAllowedHorz;
+    private bool moving;
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = 10f;
+        speed = 60f;
         fireRate = 1f;
-        ammunitionVelocity = 70f;
+        ammunitionVelocity = 300f;
 
         _inputs = new MyInputs();
         _inputs.MyInputMap.Enable();
@@ -35,6 +37,9 @@ public class Cannon_Controller : MonoBehaviour
 
         _inputs.MyInputMap.RotateCannon.performed += _ => { StartCoroutine(MoveCannonHorizontally()); };
         _inputs.MyInputMap.RotateCannon.canceled += _ => { rotateAllowedHorz = false; };
+
+        _inputs.MyInputMap.MoveTank.performed += _ => { StartCoroutine(MoveTankInXY()); };
+        _inputs.MyInputMap.MoveTank.canceled += _ => { moving = false; };
     }
 
     private void Update()
@@ -51,6 +56,25 @@ public class Cannon_Controller : MonoBehaviour
         }
     }
 
+    IEnumerator MoveTankInXY()
+    {
+        moving = true;
+
+        while (moving)
+        {
+            var readInput = _inputs.MyInputMap.MoveTank.ReadValue<float>();
+            var movement = Vector3.right * readInput * Time.deltaTime * speed;
+            parentRigid.velocity = parentTransform.forward * speed * readInput;
+
+            //parentTransform.position = new Vector3(movement.x + parentTransform.position.x, parentTransform.position.y, parentTransform.position.z);
+            yield return null;
+        }
+
+        if (!moving)
+        {
+            parentRigid.velocity = new Vector3(0,0,0);
+        }
+    }
     IEnumerator MoveCannonVertically()
     {
         rotateAllowedVert = true;

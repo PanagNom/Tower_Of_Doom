@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MoveTank",
+                    "type": "Value",
+                    "id": "6f16eb4f-2fbe-4481-b9f5-d894604db152",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -81,7 +90,7 @@
                 {
                     "name": "negative",
                     "id": "09b7469d-77a0-4c0e-8171-c6984dd9667b",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -92,7 +101,7 @@
                 {
                     "name": "positive",
                     "id": "7d1a8081-291f-4eda-8fe3-2fb7fb4b0f84",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -136,13 +145,46 @@
                 {
                     "name": "",
                     "id": "8a705775-9c95-433b-8e6b-193613759040",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "88487cad-de4a-4be7-9d6a-493e10a30b46",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveTank",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "1d9be7c6-0b76-4ec1-8727-7e84bf14ae19",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveTank",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "093bd370-d6a4-4493-9816-1affd83f9c47",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveTank",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
