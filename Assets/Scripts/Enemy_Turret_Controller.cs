@@ -35,7 +35,7 @@ public class Enemy_Turret_Controller : MonoBehaviour
     {
         
     }
-
+    /*
     // Update is called once per frame
     void Update()
     {
@@ -51,15 +51,11 @@ public class Enemy_Turret_Controller : MonoBehaviour
                 time = 0.0f;
             }
         }
-        
-        
     }
-
+    */
     bool inView()
     {
         float distance = Vector3.Distance(Player.transform.position, TowerPosition.transform.position);
-        
-        Debug.Log(distance);
 
         if (distance >= MinDist && distance <= MaxDist)
         {

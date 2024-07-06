@@ -8,7 +8,7 @@ public class Cannon_Controller : MonoBehaviour
     public Rigidbody Ammunition;
 
     public float speed;
-    public MyInputs _inputs;
+    public PlayerInputs playerInputs;
 
     public Transform parentTransform;
     public Rigidbody parentRigid;
@@ -21,7 +21,7 @@ public class Cannon_Controller : MonoBehaviour
     private bool rotateAllowedVert;
     private bool rotateAllowedHorz;
     private bool moving;
-
+    /*
     // Start is called before the first frame update
     void Start()
     {
@@ -109,4 +109,5 @@ public class Cannon_Controller : MonoBehaviour
             yield return null;
         }
     }
+    */
 }
