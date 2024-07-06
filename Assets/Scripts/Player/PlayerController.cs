@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
@@ -10,110 +11,107 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController characterController;
     private PlayerInputs playerInputs;
 
-    private Vector3 move = Vector3.zero;
-    private Vector3 playerVelocity;
+    private Vector3 moveDirection = Vector3.zero;
+    private Vector3 playerVelocity = Vector3.zero;
+    private Vector3 jumpDirection = Vector3.zero;
     private bool isRunning = false;
 
-    public float speed = 5f;
+    public float walkSpeed = 5f;
+    public float runSpeed = 10f;
     public float gravity = -9.8f;
     public float jumpHeight = 1.5f;
 
     public Camera playerCamera;
     public float xSensitivity = 3f;
     public float ySensitivity = 3f;
-    private Vector2 mouseInput;
-    private float rotateTo = 0f;
+    private float verticalRotation = 0f;
 
     private void Awake()
     {
         // Confines the cursor
         Cursor.lockState = CursorLockMode.Confined;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
+        characterController = GetComponent<CharacterController>();
         playerInputs = new PlayerInputs();
 
-        characterController = GetComponent<CharacterController>();
+        playerInputs.PlayerMap.Walk.performed += ctx => OnMove(ctx);
+        playerInputs.PlayerMap.Walk.canceled += ctx => OnMove(ctx);
+        playerInputs.PlayerMap.Jump.performed += ctx => OnJump(ctx);
+        playerInputs.PlayerMap.Run.performed += ctx => OnRun(ctx);
     }
-    public void FixedUpdate()
+    private void OnEnable()
     {
-        if(characterController.isGrounded)
+        playerInputs.Enable();
+    }
+    private void OnDisable()
+    {
+        playerInputs.Disable();
+    }
+    private void Update()
+    {
+        HandleMovement();
+        HandleGravity();
+        
+    }
+    private void LateUpdate()
+    {
+        HandleLook();
+    }
+    private void HandleMovement()
+    {
+        if (characterController.isGrounded)
         {
-            characterController.Move(transform.TransformDirection(move) * Time.deltaTime * speed);
+            characterController.Move(transform.TransformDirection(moveDirection) * 
+                Time.deltaTime * (isRunning?runSpeed:walkSpeed));
         }
         else
         {
-            move = new Vector3(0, 0, move.z);
-            characterController.Move(transform.TransformDirection(move) * Time.deltaTime * speed);
+            characterController.Move(transform.TransformDirection(jumpDirection) *
+                Time.deltaTime * (isRunning ? runSpeed : walkSpeed));
         }
-
+    }
+    private void HandleGravity()
+    {       
         playerVelocity.y += gravity * Time.deltaTime;
 
         if (characterController.isGrounded && playerVelocity.y < 0f)
         {
             playerVelocity.y = -2f;
+            playerVelocity.z = 0f;
         }
 
         characterController.Move(playerVelocity * Time.deltaTime);
     }
-    public void Move(InputAction.CallbackContext context)
+    private void HandleLook()
     {
-        if (context.performed)
+        Vector2 lookInput = playerInputs.PlayerMap.Look.ReadValue<Vector2>();
+        float mouseX = lookInput.x * xSensitivity * Time.deltaTime;
+        float mouseY = lookInput.y * ySensitivity * Time.deltaTime;
+
+        verticalRotation -= mouseY;
+        verticalRotation = Mathf.Clamp(verticalRotation, -80f, 80f);
+
+        playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
+        transform.Rotate(Vector3.up * mouseX);
+    }
+    private void OnMove(InputAction.CallbackContext context)
+    {
+
+        Vector2 input = context.ReadValue<Vector2>();
+        moveDirection = new Vector3(input.x, 0, input.y);
+    }
+    private void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed && characterController.isGrounded)
         {
-            var movement = context.ReadValue<Vector2>();
-            move = new Vector3(movement.x, 0, movement.y);
-        }
-        else if (context.canceled)
-        {
-            move = Vector3.zero;
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+            jumpDirection = moveDirection;
         }
     }
-    public void Jump(InputAction.CallbackContext context)
+    private void OnRun(InputAction.CallbackContext context)
     {
-        Debug.Log("Jump");
         if(context.performed)
         {
-            if (characterController.isGrounded)
-            {
-                playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
-            }
-        }
-    }
-    public void Run(InputAction.CallbackContext context)
-    {
-        if(context.performed)
-        {
-            Debug.Log(isRunning);
-            if (isRunning == false)
-            {
-                speed *= 2;
-                isRunning = true;
-            }
-            else
-            {
-                speed /= 2;
-                isRunning = false;
-            }
-        }
-    }
-    public void Look(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            Debug.Log("Camera");
-            mouseInput = context.ReadValue<Vector2>();
-
-            float mouseInputX = mouseInput.x;
-            float mouseInputY = mouseInput.y;
-
-            rotateTo -= (mouseInputY * Time.deltaTime) * ySensitivity;
-            rotateTo = Mathf.Clamp(rotateTo, -80.0f, 80.0f);
-
-            playerCamera.transform.localRotation = Quaternion.Euler(rotateTo, 0f, 0f);
-
-            transform.Rotate(Vector3.up * (mouseInputX * Time.deltaTime) * ySensitivity);
+            isRunning = !isRunning;
         }
     }
 }
