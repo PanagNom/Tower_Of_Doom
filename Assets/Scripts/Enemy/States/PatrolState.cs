@@ -25,7 +25,7 @@ public class PatrolState : BaseState
         // If the enemy can see the player, change to the attack state.
         if (enemy.CanSeePlayer())
         {
-            stateMachine.ChangeState( new AttackState());
+            stateMachine.ChangeState( new ApproachState());
         }
     }
     // Function to move the enemy along the designated path.
@@ -56,5 +56,4 @@ public class PatrolState : BaseState
             }
         }
     }
-
 }

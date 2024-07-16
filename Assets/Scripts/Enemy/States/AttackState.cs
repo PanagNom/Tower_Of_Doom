@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class AttackState : BaseState
 {
-    private float cofidenceTimer;
-    private float attackTimer;
+    private int confidenceTime = 5;
+    private float c_timer = 0;
+    private int attackTime = 5;
+    private float a_timer = 0;
 
     public override void Enter()
     {
-
+        attackTime = (int)enemy.attackRate;
     }
 
     public override void Exit()
@@ -21,22 +23,24 @@ public class AttackState : BaseState
     {
         if(!enemy.CanSeePlayer())
         {
-            cofidenceTimer += Time.deltaTime;
-            if (cofidenceTimer > 8)
+            c_timer += Time.deltaTime;
+            if (c_timer > confidenceTime)
             {
                 stateMachine.ChangeState(new SearchState());
             }
         }
         else
         {
-            cofidenceTimer = 0;
-            attackTimer += Time.deltaTime;
+            c_timer = 0;
+            a_timer += Time.deltaTime;
 
             enemy.transform.LookAt(enemy.Player.transform);
 
-            if(attackTimer>enemy.attackRate)
+            if(a_timer > attackTime)
             {
                 Attack();
+
+                a_timer = 0;
             }
             enemy.LastKnownPos = enemy.Player.transform.position;
         }
