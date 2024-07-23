@@ -11,6 +11,7 @@ public class AttackState : BaseState
 
     public override void Enter()
     {
+
         attackTime = (int)enemy.attackRate;
     }
 
@@ -38,8 +39,9 @@ public class AttackState : BaseState
 
             if(a_timer > attackTime)
             {
+                enemy.animator.SetBool("InRange", true);
                 Attack();
-
+                enemy.animator.SetBool("InRange", false);
                 a_timer = 0;
             }
             enemy.LastKnownPos = enemy.Player.transform.position;

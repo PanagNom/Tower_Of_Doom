@@ -10,6 +10,7 @@ public class ApproachState : BaseState
 
     public override void Enter()
     {
+        enemy.animator.SetBool("IsMoving", true);
     }
 
     public override void Exit()

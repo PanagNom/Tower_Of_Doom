@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent m_Agent;
     private StateMachine m_StateMachine;
 
+    public Animator animator;
+
     public Path path;
     public NavMeshAgent Agent { get { return m_Agent; } }
     public GameObject Player { get { return player; } }
@@ -17,7 +19,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private string currentState;
-
+    
     private float health;
     private float maxHealth = 10f;
     private float sightDistance = 10f;
@@ -31,7 +33,7 @@ public class Enemy : MonoBehaviour
         m_Agent = GetComponent<NavMeshAgent>();
         m_StateMachine = GetComponent<StateMachine>();
         player = GameObject.FindGameObjectWithTag("Player");
-
+        animator =  GetComponentInChildren<Animator>();
         m_StateMachine.Initialize();
     }
     private void Update()

@@ -10,10 +10,15 @@ public class PatrolState : BaseState
     // Function executed when we first enter the state.
     public override void Enter()
     {
+        enemy.animator.SetBool("IsMoving", true);
+        enemy.animator.SetBool("JustStopped", false);
+        enemy.animator.SetBool("WalkAgain", false);
+        enemy.animator.SetBool("InRange", false);
     }
     // Function executed when we exit the state.
     public override void Exit()
     {
+        enemy.animator.SetBool("IsMoving", false);
     }
 
     // Function executed every frame as long as the state is active.
@@ -36,10 +41,15 @@ public class PatrolState : BaseState
         // does not have a destination so the remainingDistance is 0 move to the next waypoint.
         if (enemy.Agent.remainingDistance < 0.2f)
         {
+            enemy.animator.SetBool("JustStopped", true);
+            enemy.animator.SetBool("WalkAgain", false);
             // Wait for a small amount of time before moving forward.
             waitTimer += Time.deltaTime;
             if (waitTimer > 3)
             {
+                enemy.animator.SetBool("JustStopped", false);
+                enemy.animator.SetBool("WalkAgain", true);
+
                 // Circle around the waypoints.
                 if (waypointIndex < enemy.path.waypoints.Count - 1)
                 {
