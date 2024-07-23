@@ -15,7 +15,11 @@ public class PlayerMotor : MonoBehaviour
     private Vector3 playerVelocity = Vector3.zero;
     private Vector3 jumpDirection = Vector3.zero;
     private bool isRunning = false;
+    private bool isCrouching = false;
+    private float playerCrouchHeight;
+    private float playerHeight;
 
+    public float crouchSpeed = 3f;
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
     public float gravity = -9.8f;
@@ -37,6 +41,7 @@ public class PlayerMotor : MonoBehaviour
         playerInputs.PlayerMap.Walk.canceled += ctx => OnMove(ctx);
         playerInputs.PlayerMap.Jump.performed += ctx => OnJump(ctx);
         playerInputs.PlayerMap.Run.performed += ctx => OnRun(ctx);
+        playerInputs.PlayerMap.Crouch.performed += ctx => OnCrouch(ctx);
     }
     private void OnEnable()
     {
@@ -58,13 +63,21 @@ public class PlayerMotor : MonoBehaviour
     }
     private void HandleMovement()
     {
-        if (characterController.isGrounded)
+        if (characterController.isGrounded && !isCrouching)
         {
+            playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 1, playerCamera.transform.position.z);
             characterController.Move(transform.TransformDirection(moveDirection) * 
                 Time.deltaTime * (isRunning?runSpeed:walkSpeed));
         }
+        else if(characterController.isGrounded && isCrouching)
+        {
+            playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, .5f, playerCamera.transform.position.z);
+            characterController.Move(transform.TransformDirection(moveDirection) *
+                Time.deltaTime * crouchSpeed);
+        }
         else
         {
+            playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 1, playerCamera.transform.position.z);
             characterController.Move(transform.TransformDirection(jumpDirection) *
                 Time.deltaTime * (isRunning ? runSpeed : walkSpeed));
         }
@@ -112,6 +125,13 @@ public class PlayerMotor : MonoBehaviour
         if(context.performed)
         {
             isRunning = !isRunning;
+        }
+    }
+    private void OnCrouch(InputAction.CallbackContext context)
+    {
+        if(context.performed && characterController.isGrounded)
+        {
+            isCrouching = !isCrouching;
         }
     }
 }
