@@ -34,6 +34,11 @@ public class InputManager : MonoBehaviour
     {
         playerLook.ProcessLook(playerInputs.PlayerMap.Look.ReadValue<Vector2>());
     }
+
+    public PlayerInputs GetInputMap()
+    {
+        return playerInputs;
+    }
     private void OnEnable()
     {
         playerInputs.Enable();
