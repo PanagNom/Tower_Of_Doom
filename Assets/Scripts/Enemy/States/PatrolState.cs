@@ -36,7 +36,6 @@ public class PatrolState : BaseState
     // Function to move the enemy along the designated path.
     public void PatrolCycle()
     {
-        Debug.Log(enemy.Agent.remainingDistance);
         // If you have reached a paths node or this is the first run and the agent 
         // does not have a destination so the remainingDistance is 0 move to the next waypoint.
         if (enemy.Agent.remainingDistance < 0.2f)

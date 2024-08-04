@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
-public class PlayerMotor : MonoBehaviour
+public class PlayerControler : MonoBehaviour
 {
     private CharacterController characterController;
     private PlayerInputs playerInputs;
@@ -20,8 +20,7 @@ public class PlayerMotor : MonoBehaviour
     private float playerHeight;
 
     public float crouchSpeed = 3f;
-    public float walkSpeed = 5f;
-    public float runSpeed = 10f;
+    public float speed = 5f;
     public float gravity = -9.8f;
     public float jumpHeight = 1.5f;
 
@@ -65,21 +64,15 @@ public class PlayerMotor : MonoBehaviour
     {
         if (characterController.isGrounded && !isCrouching)
         {
-            playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 1, playerCamera.transform.position.z);
-            characterController.Move(transform.TransformDirection(moveDirection) * 
-                Time.deltaTime * (isRunning?runSpeed:walkSpeed));
+            characterController.Move(transform.TransformDirection(moveDirection) * Time.deltaTime * speed);
         }
         else if(characterController.isGrounded && isCrouching)
         {
-            playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, .5f, playerCamera.transform.position.z);
-            characterController.Move(transform.TransformDirection(moveDirection) *
-                Time.deltaTime * crouchSpeed);
+            characterController.Move(transform.TransformDirection(moveDirection) * Time.deltaTime * crouchSpeed);
         }
         else
         {
-            playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 1, playerCamera.transform.position.z);
-            characterController.Move(transform.TransformDirection(jumpDirection) *
-                Time.deltaTime * (isRunning ? runSpeed : walkSpeed));
+            characterController.Move(transform.TransformDirection(jumpDirection) * Time.deltaTime * speed);
         }
     }
     private void HandleGravity()
@@ -124,7 +117,16 @@ public class PlayerMotor : MonoBehaviour
     {
         if(context.performed)
         {
-            isRunning = !isRunning;
+            if (isRunning == false)
+            {
+                speed *= 2;
+                isRunning = true;
+            }
+            else
+            {
+                speed /= 2;
+                isRunning = false;
+            }
         }
     }
     private void OnCrouch(InputAction.CallbackContext context)
