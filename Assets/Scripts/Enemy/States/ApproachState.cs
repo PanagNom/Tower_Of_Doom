@@ -19,7 +19,12 @@ public class ApproachState : BaseState
 
     public override void Perform()
     {
-        if(enemy.CanSeePlayer())
+        if (enemy.Health <= 0)
+        {
+            stateMachine.ChangeState(new DeathState());
+        }
+
+        if (enemy.CanSeePlayer())
         {
             playerDistance = Vector3.Distance(enemy.transform.position, enemy.Player.transform.position);
             if (playerDistance > 1)

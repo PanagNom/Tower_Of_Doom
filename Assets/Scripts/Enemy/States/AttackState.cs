@@ -22,7 +22,12 @@ public class AttackState : BaseState
 
     public override void Perform()
     {
-        if(!enemy.CanSeePlayer())
+        if (enemy.Health <= 0)
+        {
+            stateMachine.ChangeState(new DeathState());
+        }
+
+        if (!enemy.CanSeePlayer())
         {
             c_timer += Time.deltaTime;
             if (c_timer > confidenceTime)

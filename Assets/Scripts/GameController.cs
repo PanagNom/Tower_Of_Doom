@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
 
     public void UpdateScore(int points)
     {
+        Debug.Log("Score");
         score += points;
     }
 

@@ -27,6 +27,11 @@ public class PatrolState : BaseState
         // Move the enemy along the designated path.
         PatrolCycle();
 
+        if (enemy.Health <= 0)
+        {
+            stateMachine.ChangeState(new DeathState());
+        }
+
         // If the enemy can see the player, change to the attack state.
         if (enemy.CanSeePlayer())
         {

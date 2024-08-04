@@ -19,12 +19,14 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private string currentState;
-    
-    private float health;
+
+    public float health = 10f;
     private float maxHealth = 10f;
     private float sightDistance = 10f;
     public float fieldOfView = 85f;
     public float attackRate;
+
+    public float Health { get { return health; } }
 
     // Start is called before the first frame update
     void Start()
@@ -75,10 +77,9 @@ public class Enemy : MonoBehaviour
         // Return false because you can't see the player.
         return false;
     }
-
-    private void Death()
+    public void Death()
     {
         Debug.Log("Enemy death.");
-        Destroy(gameObject);
+        Destroy(gameObject, 2);
     }
 }
