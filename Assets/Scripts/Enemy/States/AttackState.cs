@@ -6,13 +6,16 @@ public class AttackState : BaseState
 {
     private int confidenceTime = 5;
     private float c_timer = 0;
-    private int attackTime = 5;
+    private int attackTime = 3;
     private float a_timer = 0;
 
     public override void Enter()
-    {
-
+    { 
         attackTime = (int)enemy.attackRate;
+        enemy.animator.SetBool("IsMoving", false);
+        enemy.animator.SetBool("JustStopped", false);
+        enemy.animator.SetBool("WalkAgain", false);
+        enemy.animator.SetBool("InRange", true);
     }
 
     public override void Exit()
@@ -40,13 +43,20 @@ public class AttackState : BaseState
             c_timer = 0;
             a_timer += Time.deltaTime;
 
-            enemy.transform.LookAt(enemy.Player.transform);
+            enemy.transform.LookAt(new Vector3 (enemy.Player.transform.position.x, 0f, enemy.Player.transform.position.z));
+            //enemy.transform.LookAt(enemy.Player.transform.position);
+            float playerDistance = Vector3.Distance(enemy.transform.position, enemy.Player.transform.position);
 
-            if(a_timer > attackTime)
+            if (playerDistance > 5)
+            {
+                stateMachine.ChangeState(new ApproachState());
+                return;
+            }
+
+            if (a_timer > attackTime)
             {
                 enemy.animator.SetBool("InRange", true);
                 Attack();
-                enemy.animator.SetBool("InRange", false);
                 a_timer = 0;
             }
             enemy.LastKnownPos = enemy.Player.transform.position;
@@ -55,6 +65,6 @@ public class AttackState : BaseState
 
     private void Attack()
     {
-
+        Debug.Log("Attack");
     }
 }

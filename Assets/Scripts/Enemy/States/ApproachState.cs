@@ -11,6 +11,9 @@ public class ApproachState : BaseState
     public override void Enter()
     {
         enemy.animator.SetBool("IsMoving", true);
+        enemy.animator.SetBool("JustStopped", false);
+        enemy.animator.SetBool("WalkAgain", false);
+        enemy.animator.SetBool("InRange", false);
     }
 
     public override void Exit()
@@ -26,15 +29,7 @@ public class ApproachState : BaseState
 
         if (enemy.CanSeePlayer())
         {
-            playerDistance = Vector3.Distance(enemy.transform.position, enemy.Player.transform.position);
-            if (playerDistance > 1)
-            {
-                enemy.Agent.SetDestination(enemy.Player.transform.position);
-            }
-            else
-            {
-                stateMachine.ChangeState(new AttackState());
-            }
+            Approach();
         }
         else
         {
@@ -43,6 +38,23 @@ public class ApproachState : BaseState
             {
                 stateMachine.ChangeState(new SearchState());
             }
+        }
+    }
+
+    private void Approach()
+    {
+        playerDistance = Vector3.Distance(enemy.transform.position, enemy.Player.transform.position);
+        enemy.Agent.stoppingDistance = 2.5f;
+
+        if (enemy.Agent.remainingDistance > 3)
+        {
+            enemy.Agent.SetDestination(enemy.Player.transform.position);
+        }
+        else
+        {
+            enemy.animator.SetBool("IsMoving", false);
+
+            stateMachine.ChangeState(new AttackState());
         }
     }
 
