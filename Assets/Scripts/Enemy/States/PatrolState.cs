@@ -14,6 +14,8 @@ public class PatrolState : BaseState
         enemy.animator.SetBool("JustStopped", false);
         enemy.animator.SetBool("WalkAgain", false);
         enemy.animator.SetBool("InRange", false);
+
+        enemy.Agent.SetDestination(enemy.path.waypoints[waypointIndex].position);
     }
     // Function executed when we exit the state.
     public override void Exit()
